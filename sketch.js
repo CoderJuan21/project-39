@@ -2,6 +2,14 @@ var PLAY = 1;
 var END = 0;
 var gameState = PLAY;
 
+
+var index = 0;
+var x = 0;
+var distance = 0;
+var y;
+
+var bg;
+
 var trex, trex_running, trex_collided;
 var trx = [trex]
 var ground, invisibleGround, groundImage;
@@ -21,6 +29,8 @@ var birdImage;
 function preload(){
   trex_running = loadAnimation("trex1.png","trex3.png","trex4.png");
   trex_collided = loadAnimation("trex_collided.png");
+
+  bg = loadImage("bg.jpg");
   
   groundImage = loadImage("ground2.png");
   
@@ -45,6 +55,7 @@ function preload(){
 
 function setup() {
   createCanvas(600, 200);
+  background(bg);
   
   trex = createSprite(50,180,20,50);
   trex.addAnimation("running", trex_running);
@@ -91,7 +102,9 @@ function draw() {
   console.log("this is ",gameState)
 
  
-  
+  if(score > 10000){
+    gameState = END;
+  }
   
   if(gameState === PLAY){
     gameOver.visible = false
@@ -115,13 +128,12 @@ function draw() {
       jumpSound.play();
     }
     
-    var index = 0;
-    var x = 0;
-    var y;
+   
       for(var trex in trx){
+        var distance = 0;
         index = index+1;
         x = x+200;
-        y = displayHeight-trex[trx].distance;
+      //  y = displayHeight-trex[trx].distance;
         trex[index-1].x = x;
         trex[index-1].y = y;
 
@@ -151,6 +163,8 @@ function draw() {
       jumpSound.play();
         //gameState = END;
         //dieSound.play();
+
+        trex.collide(invisibleGround);
       
     }
   }
@@ -171,11 +185,13 @@ function draw() {
      
      obstaclesGroup.setVelocityXEach(0);
      cloudsGroup.setVelocityXEach(0);
+
+     trex.collide(invisibleGround);
    }
   
  
   //stop trex from falling down
-  trex.collide(invisibleGround);
+ 
   
  /* for(var trex in trex){
     trex.x = trex.x+200;
